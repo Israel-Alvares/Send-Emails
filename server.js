@@ -14,6 +14,8 @@ app.post('/send-emails', async function (response, reply) {
   try {
     const { emails, message } = response.body
 
+    const contact = emails.split(',').map(email => email.trim());
+
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 587,
@@ -36,19 +38,21 @@ app.post('/send-emails', async function (response, reply) {
 
       const mailOptions = {
         from: 'comunicacao.stps@ipb.org.br', // sender address
-        to: emails,
-        subject: "CFO- Curso de Formação de Oficiais", // Subject line
+        to: contact,
+        subject: "STPS", // Subject line
         text: message, // plain text body
         // attachments: [attachments]
       }
       // send mail with defined transport object
-      const info = await transporter.sendMail(mailOptions)
+      const info = await transporter.sendMail(mailOptions);
       console.log("Message sent: %s", info.messageId);
+      return reply.send({ success: true, messageId: info.messageId });
     }
 
     main().catch(console.error);
   } catch (error) {
     console.error(`Deu erro aqui: ${error}`)
+    reply.status(500).send({ error: "Erro ao enviar email" });
   }
 
 })

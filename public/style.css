@@ -55,6 +55,21 @@ body {
   margin-bottom: 10px;
 }
 
+/* #subject{
+  width: 80%;
+  padding: 8px;
+  border: 1px solid #004117;
+  border-radius: 5px;
+  margin-bottom: 10px;
+} */
+
+
+/* label {
+  margin-top: 0;
+  text-align: center;
+  font-weight: bold;
+} */
+
 .form-group input[type="submit"] {
   background-color: #004117;
   color: #fff;
