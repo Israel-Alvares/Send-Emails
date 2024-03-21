@@ -2,7 +2,7 @@ import fastify from 'fastify';
 import formBody from '@fastify/formbody';
 import nodemailer from 'nodemailer';
 
-const app = fastify({ logger: true })
+const app = fastify()
 
 app.register(formBody)
 
@@ -12,7 +12,7 @@ app.get('/', function (response, reply) {
 
 app.post('/send-emails', async function (response, reply) {
   try {
-    const { emails, message } = response.body
+    const { emails, subject, message } = response.body
 
     const contact = emails.split(',').map(email => email.trim());
 
@@ -39,14 +39,14 @@ app.post('/send-emails', async function (response, reply) {
       const mailOptions = {
         from: 'comunicacao.stps@ipb.org.br', // sender address
         to: contact,
-        subject: "STPS", // Subject line
+        subject: subject, // Subject line
         text: message, // plain text body
         // attachments: [attachments]
       }
       // send mail with defined transport object
       const info = await transporter.sendMail(mailOptions);
       console.log("Message sent: %s", info.messageId);
-      return reply.send({ success: true, messageId: info.messageId });
+      reply.send({ success: true, messageId: info.messageId }).redirect('http://localhost:5500/public/index.html')
     }
 
     main().catch(console.error);
